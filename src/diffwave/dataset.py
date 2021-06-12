@@ -38,7 +38,7 @@ class NumpyDataset(torch.utils.data.Dataset):
     spec_filename = self.filenames[idx]
     signal, _ = torchaudio.load_wav(audio_filename)
     spectrogram = np.load(spec_filename)
-    spectrogram = np.squeeze(spectrogram,0)
+    #spectrogram = np.squeeze(spectrogram,0)
     
     return {
         'audio': signal[0] / 32767.5,
