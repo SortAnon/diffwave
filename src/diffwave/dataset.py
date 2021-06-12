@@ -28,16 +28,18 @@ class NumpyDataset(torch.utils.data.Dataset):
     super().__init__()
     self.filenames = []
     for path in paths:
-      self.filenames += glob(f'{path}/**/*.wav', recursive=True)
+      self.filenames += glob(f'{path}/**/*.npy', recursive=True)
 
   def __len__(self):
     return len(self.filenames)
 
   def __getitem__(self, idx):
-    audio_filename = self.filenames[idx]
-    spec_filename = f'{audio_filename}.spec.npy'
+    audio_filename = self.filenames[idx][:-4] + ".wav"
+    spec_filename = self.filenames[idx]
     signal, _ = torchaudio.load_wav(audio_filename)
     spectrogram = np.load(spec_filename)
+    spectrogram = np.squeeze(spectrogram,0)
+    
     return {
         'audio': signal[0] / 32767.5,
         'spectrogram': spectrogram.T
